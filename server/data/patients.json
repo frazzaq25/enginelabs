@@ -1,0 +1,77 @@
+[
+  {
+    "id": "patient-1",
+    "firstName": "Alice",
+    "lastName": "Anderson",
+    "dob": "1985-06-15",
+    "gender": "female",
+    "mrn": "AA-1001",
+    "email": "alice.anderson@examplehealth.org",
+    "phone": "+1 555-111-2222",
+    "primaryProvider": "Dr. Hudson",
+    "address": {
+      "line1": "100 Maple Ave",
+      "line2": "",
+      "city": "Springfield",
+      "state": "IL",
+      "postalCode": "62701"
+    },
+    "notes": [
+      { "id": "note-1", "title": "Annual wellness visit", "createdAt": "2024-02-18T14:30:00.000Z" }
+    ],
+    "templates": [
+      { "id": "tpl-1", "name": "Hypertension Follow-up", "lastUsedAt": "2024-03-01T16:00:00.000Z" }
+    ],
+    "createdAt": "2023-01-05T12:00:00.000Z",
+    "updatedAt": "2024-04-02T10:00:00.000Z"
+  },
+  {
+    "id": "patient-2",
+    "firstName": "Brian",
+    "lastName": "Brooks",
+    "dob": "1972-09-03",
+    "gender": "male",
+    "mrn": "BB-2044",
+    "email": "brian.brooks@examplehealth.org",
+    "phone": "+1 555-333-4488",
+    "primaryProvider": "Dr. Lee",
+    "address": {
+      "line1": "88 Riverside Dr",
+      "line2": "Apt 4B",
+      "city": "Chicago",
+      "state": "IL",
+      "postalCode": "60601"
+    },
+    "notes": [
+      { "id": "note-2", "title": "Cardiology consult", "createdAt": "2023-11-07T09:45:00.000Z" },
+      { "id": "note-3", "title": "Medication reconciliation", "createdAt": "2024-05-21T11:15:00.000Z" }
+    ],
+    "templates": [
+      { "id": "tpl-2", "name": "CHF Education", "lastUsedAt": "2024-04-12T13:30:00.000Z" }
+    ],
+    "createdAt": "2022-08-12T12:00:00.000Z",
+    "updatedAt": "2024-05-20T13:00:00.000Z"
+  },
+  {
+    "id": "patient-3",
+    "firstName": "Cecilia",
+    "lastName": "Chen",
+    "dob": "1994-01-22",
+    "gender": "female",
+    "mrn": "CC-3307",
+    "email": "cecilia.chen@examplehealth.org",
+    "phone": "+1 555-777-9900",
+    "primaryProvider": "Dr. Morales",
+    "address": {
+      "line1": "742 Evergreen Terrace",
+      "line2": "",
+      "city": "Seattle",
+      "state": "WA",
+      "postalCode": "98101"
+    },
+    "notes": [],
+    "templates": [],
+    "createdAt": "2023-07-29T08:00:00.000Z",
+    "updatedAt": "2024-03-11T09:20:00.000Z"
+  }
+]
