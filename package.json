@@ -1,0 +1,29 @@
+{
+  "name": "ehr-mongo-models",
+  "version": "0.1.0",
+  "description": "EHR domain models for MongoDB with encryption, validation, and HIPAA considerations.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "ehr",
+    "mongoose",
+    "encryption",
+    "hipaa"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "mongoose": "^7.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
