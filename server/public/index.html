@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #0f172a;
+        background-color: #f8fafc;
+        line-height: 1.5;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        min-height: 100vh;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      .app-shell {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: clamp(1.75rem, 2vw + 1rem, 2.25rem);
+        font-weight: 600;
+      }
+
+      header p {
+        margin: 0.25rem 0 0;
+        color: #475569;
+        max-width: 540px;
+        font-size: 1rem;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border-radius: 18px;
+        padding: 1.75rem;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .panel-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      .badge {
+        background: #e0e7ff;
+        color: #312e81;
+        padding: 0.2rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .table-wrapper {
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      thead {
+        background: #f8fafc;
+      }
+
+      th {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748b;
+        padding: 0.9rem 1.1rem;
+        text-align: left;
+      }
+
+      td {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        font-size: 0.95rem;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      tbody tr:hover {
+        background: rgba(226, 232, 240, 0.35);
+      }
+
+      .patient-name {
+        font-weight: 600;
+        color: #1e293b;
+        display: block;
+      }
+
+      .patient-id {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #475569;
+        margin-top: 0.25rem;
+        display: inline-block;
+        padding: 0.1rem 0.45rem;
+        background: rgba(30, 64, 175, 0.08);
+        border-radius: 6px;
+      }
+
+      .table-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      button {
+        font-family: inherit;
+        font-size: 0.95rem;
+        border-radius: 999px;
+        border: none;
+        padding: 0.6rem 1.25rem;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        box-shadow: 0 14px 24px rgba(37, 99, 235, 0.35);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 32px rgba(37, 99, 235, 0.4);
+      }
+
+      .btn-outline {
+        background: white;
+        color: #1e3a8a;
+        border: 1px solid rgba(99, 102, 241, 0.4);
+      }
+
+      .btn-outline:hover {
+        background: #eef2ff;
+      }
+
+      .btn-danger {
+        background: rgba(239, 68, 68, 0.12);
+        color: #b91c1c;
+        border-radius: 999px;
+        padding: 0.45rem 0.95rem;
+      }
+
+      .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.2);
+      }
+
+      .btn-secondary {
+        background: rgba(30, 64, 175, 0.08);
+        color: #1d4ed8;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(30, 64, 175, 0.14);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      .card-list {
+        display: none;
+        gap: 1rem;
+      }
+
+      .patient-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.2rem;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        display: grid;
+        gap: 0.8rem;
+        box-shadow: 0 20px 35px rgba(15, 23, 42, 0.08);
+      }
+
+      .card-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        align-items: baseline;
+      }
+
+      .card-row .label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #64748b;
+      }
+
+      .card-row .value {
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .card-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .empty-state {
+        border: 1px dashed rgba(148, 163, 184, 0.6);
+        border-radius: 16px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        color: #475569;
+        background: rgba(248, 250, 252, 0.6);
+        display: grid;
+        gap: 0.75rem;
+        justify-items: center;
+      }
+
+      .empty-state h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        color: #1f2937;
+      }
+
+      .empty-state.loading {
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .alert {
+        border-radius: 14px;
+        padding: 0.9rem 1.1rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.1);
+      }
+
+      .alert-success {
+        background: rgba(34, 197, 94, 0.18);
+        color: #166534;
+        border: 1px solid rgba(34, 197, 94, 0.35);
+      }
+
+      .alert-error {
+        background: rgba(248, 113, 113, 0.14);
+        color: #991b1b;
+        border: 1px solid rgba(248, 113, 113, 0.35);
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        z-index: 50;
+      }
+
+      .modal {
+        background: white;
+        border-radius: 20px;
+        max-width: 480px;
+        width: min(480px, 100%);
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.45);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .modal-header {
+        padding: 1.25rem 1.5rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.75);
+      }
+
+      .modal-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .btn-icon {
+        background: transparent;
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 999px;
+        color: #475569;
+        font-size: 1.5rem;
+        display: grid;
+        place-items: center;
+      }
+
+      .btn-icon:hover {
+        background: rgba(226, 232, 240, 0.65);
+      }
+
+      form {
+        display: grid;
+        gap: 1rem;
+        padding: 1.2rem 1.5rem;
+      }
+
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.3rem;
+        display: block;
+      }
+
+      input {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        padding: 0.65rem 0.85rem;
+        font-size: 0.96rem;
+        transition: border 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: rgba(79, 70, 229, 0.6);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+
+      .helper {
+        font-size: 0.78rem;
+        color: #64748b;
+      }
+
+      .error-text {
+        font-size: 0.78rem;
+        color: #b91c1c;
+        font-weight: 500;
+      }
+
+      .form-alert {
+        border-radius: 12px;
+        background: rgba(248, 113, 113, 0.12);
+        border: 1px solid rgba(248, 113, 113, 0.38);
+        color: #b91c1c;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.85rem;
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+      }
+
+      .modal-footer .btn-secondary {
+        background: rgba(148, 163, 184, 0.18);
+        color: #334155;
+      }
+
+      .modal-footer .btn-secondary:hover {
+        background: rgba(148, 163, 184, 0.3);
+      }
+
+      @media (max-width: 900px) {
+        .app-shell {
+          padding: 2rem 1rem 3rem;
+        }
+
+        header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .header-actions {
+          justify-content: flex-start;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .panel {
+          padding: 1.4rem;
+        }
+
+        .table-wrapper {
+          display: none;
+        }
+
+        .card-list {
+          display: grid;
+        }
+
+        .card-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .card-row .value {
+          font-size: 1.05rem;
+        }
+
+        .card-actions {
+          justify-content: flex-end;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .header-actions {
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .header-actions button {
+          width: 100%;
+        }
+
+        .modal {
+          border-radius: 16px;
+          padding-bottom: 0.5rem;
+        }
+
+        form {
+          padding: 1rem 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel" data-presets="env,react">
+      const { useState, useEffect, useRef, useCallback } = React;
+
+      const createInitialForm = () => ({
+        name: "",
+        dob: "",
+        insurance: "",
+        patientId: "",
+      });
+
+      const isValidDateString = (value) => {
+        if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+          return false;
+        }
+
+        const [yearStr, monthStr, dayStr] = value.split("-");
+        const year = Number(yearStr);
+        const month = Number(monthStr);
+        const day = Number(dayStr);
+
+        if (!year || !month || !day) {
+          return false;
+        }
+
+        const date = new Date(Date.UTC(year, month - 1, day));
+
+        if (
+          date.getUTCFullYear() !== year ||
+          date.getUTCMonth() + 1 !== month ||
+          date.getUTCDate() !== day
+        ) {
+          return false;
+        }
+
+        const now = new Date();
+        const todayUTC = new Date(
+          Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+        );
+
+        return date <= todayUTC;
+      };
+
+      const formatDate = (value) => {
+        if (!value) {
+          return "—";
+        }
+
+        if (!isValidDateString(value)) {
+          return value;
+        }
+
+        const [yearStr, monthStr, dayStr] = value.split("-");
+        const date = new Date(Date.UTC(Number(yearStr), Number(monthStr) - 1, Number(dayStr)));
+
+        return date.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      };
+
+      function App() {
+        const [patients, setPatients] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [form, setForm] = useState(() => createInitialForm());
+        const [errors, setErrors] = useState({});
+        const [modalOpen, setModalOpen] = useState(false);
+        const [submitting, setSubmitting] = useState(false);
+        const [deletingId, setDeletingId] = useState(null);
+        const [feedback, setFeedback] = useState(null);
+        const [submissionError, setSubmissionError] = useState("");
+
+        const feedbackTimer = useRef(null);
+
+        const pushFeedback = useCallback((type, message) => {
+          if (feedbackTimer.current) {
+            clearTimeout(feedbackTimer.current);
+          }
+
+          setFeedback({ type, message });
+
+          feedbackTimer.current = setTimeout(() => {
+            setFeedback(null);
+            feedbackTimer.current = null;
+          }, 4000);
+        }, []);
+
+        useEffect(() => {
+          return () => {
+            if (feedbackTimer.current) {
+              clearTimeout(feedbackTimer.current);
+            }
+          };
+        }, []);
+
+        const loadPatients = useCallback(async () => {
+          setLoading(true);
+          try {
+            const response = await fetch("/api/patients");
+            if (!response.ok) {
+              throw new Error("Unable to load patients right now.");
+            }
+            const data = await response.json();
+            setPatients(Array.isArray(data) ? data : []);
+          } catch (error) {
+            pushFeedback("error", error.message || "Unable to load patients.");
+            setPatients([]);
+          } finally {
+            setLoading(false);
+          }
+        }, [pushFeedback]);
+
+        useEffect(() => {
+          loadPatients();
+        }, [loadPatients]);
+
+        useEffect(() => {
+          const previousOverflow = document.body.style.overflow;
+          if (modalOpen) {
+            document.body.style.overflow = "hidden";
+          }
+          return () => {
+            document.body.style.overflow = previousOverflow;
+          };
+        }, [modalOpen]);
+
+        const resetForm = useCallback(() => {
+          setForm(createInitialForm());
+          setErrors({});
+          setSubmissionError("");
+        }, []);
+
+        const closeModal = useCallback(() => {
+          setModalOpen(false);
+          resetForm();
+        }, [resetForm]);
+
+        const openModal = useCallback(() => {
+          resetForm();
+          setModalOpen(true);
+        }, [resetForm]);
+
+        useEffect(() => {
+          if (!modalOpen) {
+            return undefined;
+          }
+
+          const handleKeyDown = (event) => {
+            if (event.key === "Escape") {
+              closeModal();
+            }
+          };
+
+          window.addEventListener("keydown", handleKeyDown);
+          return () => window.removeEventListener("keydown", handleKeyDown);
+        }, [modalOpen, closeModal]);
+
+        const handleChange = (field) => (event) => {
+          const value = event.target.value;
+          setForm((prev) => ({ ...prev, [field]: value }));
+        };
+
+        const validateForm = () => {
+          const nextErrors = {};
+
+          if (!form.name.trim()) {
+            nextErrors.name = "Patient name is required";
+          }
+
+          if (!form.dob) {
+            nextErrors.dob = "Date of birth is required";
+          } else if (!/^\d{4}-\d{2}-\d{2}$/.test(form.dob)) {
+            nextErrors.dob = "Use the YYYY-MM-DD date format";
+          } else if (!isValidDateString(form.dob)) {
+            nextErrors.dob = "Enter a valid date that is not in the future";
+          }
+
+          if (!form.insurance.trim()) {
+            nextErrors.insurance = "Insurance provider is required";
+          }
+
+          if (form.patientId.trim() && !/^[A-Za-z0-9-_]+$/.test(form.patientId.trim())) {
+            nextErrors.patientId = "Use only letters, numbers, dashes, or underscores";
+          }
+
+          setErrors(nextErrors);
+          return Object.keys(nextErrors).length === 0;
+        };
+
+        const handleSubmit = async (event) => {
+          event.preventDefault();
+          if (submitting) {
+            return;
+          }
+
+          setSubmissionError("");
+
+          if (!validateForm()) {
+            return;
+          }
+
+          setSubmitting(true);
+
+          try {
+            const payload = {
+              name: form.name.trim(),
+              dob: form.dob,
+              insurance: form.insurance.trim(),
+            };
+
+            if (form.patientId.trim()) {
+              payload.patientId = form.patientId.trim();
+            }
+
+            const response = await fetch("/api/patients", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            let result = null;
+            try {
+              result = await response.json();
+            } catch (jsonError) {
+              result = null;
+            }
+
+            if (!response.ok) {
+              setErrors((result && result.errors) || {});
+              setSubmissionError(
+                (result && result.message) || "Unable to add patient. Please try again."
+              );
+              return;
+            }
+
+            if (result) {
+              setPatients((prev) => [result, ...prev]);
+            }
+
+            pushFeedback("success", "Patient added successfully");
+            setModalOpen(false);
+            resetForm();
+          } catch (error) {
+            setSubmissionError(error.message || "Unable to add patient right now.");
+          } finally {
+            setSubmitting(false);
+          }
+        };
+
+        const handleDelete = async (patient) => {
+          if (deletingId) {
+            return;
+          }
+
+          const confirmed = window.confirm(
+            `Delete ${patient.name}? This action cannot be undone.`
+          );
+
+          if (!confirmed) {
+            return;
+          }
+
+          setDeletingId(patient.id);
+
+          try {
+            const response = await fetch(`/api/patients/${patient.id}`, {
+              method: "DELETE",
+            });
+
+            if (response.status === 204) {
+              setPatients((prev) => prev.filter((item) => item.id !== patient.id));
+              pushFeedback("success", "Patient removed");
+              return;
+            }
+
+            let result = null;
+            try {
+              result = await response.json();
+            } catch (jsonError) {
+              result = null;
+            }
+
+            throw new Error((result && result.message) || "Unable to delete patient");
+          } catch (error) {
+            pushFeedback("error", error.message || "Unable to delete patient");
+          } finally {
+            setDeletingId(null);
+          }
+        };
+
+        return (
+          <div className="app-shell">
+            <header>
+              <div>
+                <h1>Patient management</h1>
+                <p>
+                  Track patient onboarding, insurance details, and core demographics in a single,
+                  responsive workspace.
+                </p>
+              </div>
+              <div className="header-actions">
+                <button className="btn-secondary" onClick={loadPatients} disabled={loading}>
+                  {loading ? "Refreshing..." : "Refresh"}
+                </button>
+                <button className="btn-primary" onClick={openModal}>Add patient</button>
+              </div>
+            </header>
+
+            {feedback && (
+              <div className={`alert alert-${feedback.type}`} role="status">
+                {feedback.message}
+              </div>
+            )}
+
+            <section className="panel">
+              <div className="panel-header">
+                <h2>Patient roster</h2>
+                <span className="badge">{patients.length} total</span>
+              </div>
+
+              {loading ? (
+                <div className="empty-state loading">Loading patients...</div>
+              ) : patients.length === 0 ? (
+                <div className="empty-state">
+                  <h3>No patients yet</h3>
+                  <p>Start by adding the first patient to your roster.</p>
+                  <button className="btn-primary" onClick={openModal}>
+                    Add your first patient
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="table-wrapper">
+                    <table className="patient-table">
+                      <thead>
+                        <tr>
+                          <th>Patient</th>
+                          <th>Date of birth</th>
+                          <th>Insurance</th>
+                          <th className="table-actions">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {patients.map((patient) => (
+                          <tr key={patient.id}>
+                            <td>
+                              <span className="patient-name">{patient.name}</span>
+                              <span className="patient-id">{patient.patientId}</span>
+                            </td>
+                            <td>{formatDate(patient.dob)}</td>
+                            <td>{patient.insurance}</td>
+                            <td className="table-actions">
+                              <button
+                                className="btn-danger"
+                                type="button"
+                                onClick={() => handleDelete(patient)}
+                                disabled={deletingId === patient.id}
+                              >
+                                {deletingId === patient.id ? "Deleting..." : "Delete"}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="card-list">
+                    {patients.map((patient) => (
+                      <article className="patient-card" key={`card-${patient.id}`}>
+                        <div className="card-row">
+                          <span className="label">Patient</span>
+                          <span className="value">{patient.name}</span>
+                        </div>
+                        <div className="card-row">
+                          <span className="label">Patient ID</span>
+                          <span className="value">{patient.patientId}</span>
+                        </div>
+                        <div className="card-row">
+                          <span className="label">Date of birth</span>
+                          <span className="value">{formatDate(patient.dob)}</span>
+                        </div>
+                        <div className="card-row">
+                          <span className="label">Insurance</span>
+                          <span className="value">{patient.insurance}</span>
+                        </div>
+                        <div className="card-actions">
+                          <button
+                            className="btn-danger"
+                            type="button"
+                            onClick={() => handleDelete(patient)}
+                            disabled={deletingId === patient.id}
+                          >
+                            {deletingId === patient.id ? "Deleting..." : "Delete"}
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </>
+              )}
+            </section>
+
+            {modalOpen && (
+              <div className="modal-backdrop" onClick={closeModal}>
+                <div
+                  className="modal"
+                  role="dialog"
+                  aria-modal="true"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <div className="modal-header">
+                    <h3>Add patient</h3>
+                    <button
+                      type="button"
+                      className="btn-icon"
+                      aria-label="Close"
+                      onClick={closeModal}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                  <form onSubmit={handleSubmit} noValidate>
+                    <div className="field">
+                      <label htmlFor="patient-name">Patient name</label>
+                      <input
+                        id="patient-name"
+                        type="text"
+                        placeholder="Jane Doe"
+                        value={form.name}
+                        onChange={handleChange("name")}
+                        required
+                      />
+                      {errors.name && <p className="error-text">{errors.name}</p>}
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="patient-dob">Date of birth</label>
+                      <input
+                        id="patient-dob"
+                        type="date"
+                        value={form.dob}
+                        onChange={handleChange("dob")}
+                        required
+                        max={new Date().toISOString().split("T")[0]}
+                      />
+                      {errors.dob && <p className="error-text">{errors.dob}</p>}
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="patient-insurance">Insurance provider</label>
+                      <input
+                        id="patient-insurance"
+                        type="text"
+                        placeholder="Acme Health"
+                        value={form.insurance}
+                        onChange={handleChange("insurance")}
+                        required
+                      />
+                      {errors.insurance && <p className="error-text">{errors.insurance}</p>}
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="patient-id">Patient ID (optional)</label>
+                      <input
+                        id="patient-id"
+                        type="text"
+                        placeholder="Auto-generated if left blank"
+                        value={form.patientId}
+                        onChange={handleChange("patientId")}
+                      />
+                      <p className="helper">Letters, numbers, dashes, or underscores</p>
+                      {errors.patientId && <p className="error-text">{errors.patientId}</p>}
+                    </div>
+
+                    {submissionError && <div className="form-alert">{submissionError}</div>}
+
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={closeModal}
+                      >
+                        Cancel
+                      </button>
+                      <button type="submit" className="btn-primary" disabled={submitting}>
+                        {submitting ? "Saving..." : "Save patient"}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>

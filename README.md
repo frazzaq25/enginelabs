@@ -2,6 +2,25 @@
 
 Domain models for EHR entities backed by MongoDB / Mongoose with PHI-aware encryption, validation, and HIPAA-aligned operational guidance.
 
+## Patient Management Demo App
+
+This repository now includes a lightweight full-stack patient management experience located in [`server/`](./server). The demo pairs an Express API backed by SQLite with a responsive React interface served directly by the Node.js process. You can use it to add, review, and delete patient records with inline validation.
+
+### Running the demo locally
+
+1. Install dependencies: `npm install`
+2. Start the application: `npm start`
+3. Visit <http://localhost:3000> to open the patient management UI.
+
+Patient information is stored in `data/patients.db`. The database file is created automatically on first run.
+
+### Demo highlights
+
+- Responsive table and mobile cards with patient name, DOB, insurance, and patient ID columns
+- Modal-driven patient creation with client- and server-side validation plus optional custom IDs
+- Confirmation-backed deletion and success/error toasts for key actions
+- REST API endpoints (`GET /api/patients`, `POST /api/patients`, `DELETE /api/patients/:id`) with structured JSON responses and error handling
+
 ## Contents
 
 - `src/models` – Mongoose schemas for patients, documentation templates, provider notes, and audit logs.
